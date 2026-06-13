@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ekstrakurikuler SRMA 24 KEDIRI</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+  background: radial-gradient(circle at top,#FFD70022,transparent),
+              linear-gradient(135deg,#000,#8B0000,#fff,#FFD700);
+  color:white;
+  overflow-x:hidden;
+}
+
+header{
+  text-align:center;
+  padding:30px;
+  background:rgba(0,0,0,0.7);
+  border-bottom:3px solid gold;
+}
+
+header h1{color:gold;font-size:2.5em;}
+
+.container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
+  padding:40px;
+}
+
+.card{
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:20px;
+  text-align:center;
+  backdrop-filter:blur(12px);
+  border:1px solid gold;
+  transition:0.4s;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.05);
+  box-shadow:0 0 25px gold;
+}
+
+.card img{
+  width:90px;
+  margin-bottom:10px;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);} 
+  50%{transform:translateY(-12px);} 
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg,transparent,gold,transparent);
+  top:-50%;
+  left:-50%;
+  animation:spin 6s linear infinite;
+  opacity:0.2;
+}
+
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);} }
+
+.selected{
+  border:2px solid white;
+  background:rgba(255,215,0,0.35);
+}
+
+.form-box{
+  max-width:500px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:15px;
+  background:rgba(0,0,0,0.6);
+  border:1px solid gold;
+  backdrop-filter:blur(10px);
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:10px;
+  background:gold;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{background:white;}
+
+.result{
+  text-align:center;
+  font-size:1.2em;
+  margin:20px;
+  color:gold;
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  background:black;
+  border-top:2px solid gold;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Ekstrakurikuler Sekolah Rakyat 24 Kediri</h1>
+  <p>Pilih & daftar ekstrakurikuler favoritmu 🚀</p>
+</header>
+
+<div class="container" id="cards"></div>
+
+<div class="form-box">
+  <h3>Form Pendaftaran</h3>
+  <input type="text" id="nama" placeholder="Nama">
+  <input type="text" id="kelas" placeholder="Kelas">
+  <input type="text" id="pilihan" placeholder="Ekstrakurikuler" readonly>
+  <button onclick="daftar()">Daftar</button>
+</div>
+
+<div class="result" id="hasil"></div>
+
+<footer>
+<p>© 2026 Sekolah Rakyat 24 Kediri</p>
+</footer>
+
+<script>
+const ekstras = [
+  {nama:'Musik',img:'https://cdn-icons-png.flaticon.com/512/727/727245.png'},
+  {nama:'Pramuka',img:'https://cdn-icons-png.flaticon.com/512/2917/2917242.png'},
+  {nama:'PMR',img:'https://cdn-icons-png.flaticon.com/512/2966/2966327.png'},
+  {nama:'Sempoa',img:'https://cdn-icons-png.flaticon.com/512/3135/3135768.png'},
+  {nama:'English Club',img:'https://cdn-icons-png.flaticon.com/512/197/197374.png'}
+];
+
+const container = document.getElementById('cards');
+
+// generate cards otomatis
+ ekstras.forEach(e=>{
+  const card = document.createElement('div');
+  card.className='card';
+  card.innerHTML=`<img src="${e.img}"><h3>${e.nama}</h3><p>Klik untuk memilih</p>`;
+
+  card.onclick=()=>{
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    document.getElementById('pilihan').value = e.nama;
+  };
+
+  container.appendChild(card);
+});
+
+// simpan data ke localStorage
+function daftar(){
+  const nama = document.getElementById('nama').value;
+  const kelas = document.getElementById('kelas').value;
+  const pilihan = document.getElementById('pilihan').value;
+
+  if(!nama || !kelas || !pilihan){
+    alert('Harap isi semua data!');
+    return;
+  }
+
+  const data = {nama,kelas,pilihan};
+  localStorage.setItem('pendaftaran', JSON.stringify(data));
+
+  document.getElementById('hasil').innerText =
+    `Berhasil daftar! ${nama} (${kelas}) memilih ${pilihan}`;
+}
+
+// load data jika ada
+const saved = JSON.parse(localStorage.getItem('pendaftaran'));
+if(saved){
+  document.getElementById('hasil').innerText =
+    `Data terakhir: ${saved.nama} memilih ${saved.pilihan}`;
+}
+</script>
+
+</body>
+</html>
